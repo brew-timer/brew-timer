@@ -1,34 +1,55 @@
 <template>
     <div>
         <v-card
-            width="800px"
+            width="500"
             title="Аэропресс таймер"
             text="Выбери нужные таймеры на нужное время заваривания"
         >
             <v-responsive
-                class="mx-auto"
-                max-width="344"
+                
+                max-width="450"
+                class="spacing-playground pa-10"
+                fluid
             >
-                <v-text-field
+                <!-- <v-text-field
                     v-model="time"
                     clearable
                     hide-details="auto"
                     label="Время"
                     justify-content ="center"
-                ></v-text-field>
+                ></v-text-field> -->
+                <v-slider
+                    v-model="time"
+                    thumb-label="always"
+                    step="5"
+                    show-ticks
+                    h-auto
+                    class="h-auto"/>
                 <v-btn
                     variant="tonal"
-                    @click="addTimer"
+                    @click="addTimer()"
                 >
                     Добавить таймер
                 </v-btn>
-                <v-card>
-                    {{ sum }}
-                </v-card>
+                <v-btn @click="playSound">
+                    sound test
+                </v-btn>
+                <v-container
+                    class="text-h1">
+                    {{ calcSec() }}
+                </v-container>
                 <v-btn
                     @click="startTimer">
                     Начать таймер
                 </v-btn>
+                <v-switch
+                    v-model="soundState"
+                    hide-details
+                    true-value="вкл"
+                    false-value="выкл"
+                    color="primary"
+                    :label="`Звук: ${soundState}`"
+  ></v-switch>
             </v-responsive>
             <v-divider class="mx-4"></v-divider>
             <div
@@ -45,59 +66,37 @@
     export default {
         data(){
             return{
-                time: 0,
+                time: 30,
                 timer: [],
                 sum: 0,
+                soundState: "вкл",
             }
         },
         methods:{
+            calcSec(){
+                this.timer.forEach((element) => {
+                    this.sum += element.seconds
+                })
+            },
+
             addTimer(){
                 this.timer.push({seconds: this.time})
             },
 
             startTimer(){
-                for (let t of this.timer){
-                    this.sum+=Number(t.seconds);
-                }
-                setInterval()
+                let a = setInterval(function (){
+                    alert('test')
+                    this.sum -= 1;
+                    if (this.sum == 0){
+                        clearInterval(a);
+                    }
+                }, 1000);
+                if (this.sum === 0) this.playSound();
             },
 
-            var count = 5;
-            // запущен таймер или нет
-            started = false;
-
-            // запуск таймера по кнопке
-            function start() {
-            // если таймер уже запущен — выходим из функции
-            if (started) {return};
-            // запоминаем время нажатия
-            var start_time = new Date(); 
-            // получаем время окончания таймера
-            var stop_time = start_time.setMinutes(start_time.getMinutes() + count); 
-
-            // запускаем ежесекундный отсчёт
-            var countdown = setInterval(function() {
-                // текущее время
-                var now = new Date().getTime();
-                // сколько времени осталось до конца таймера
-                var remain = stop_time - now; 
-                // переводим миллисекунды в минуты и секунды
-                var min = Math.floor( (remain % (1000 * 60 * 60)) / (1000 * 60) );
-                var sec = Math.floor( (remain % (1000 * 60)) / 1000 );
-                // если значение текущей секунды меньше 10, добавляем вначале ведущий ноль
-                sec = sec < 10 ? "0" + sec : sec;
-                // отправляем значение таймера на страницу в нужный раздел
-                document.getElementById("timer").innerHTML = min + ":" + sec;
-                // если время вышло
-                if (remain < 0) {
-                // останавливаем отсчёт
-                clearInterval(countdown);
-                // пишем текст вместо цифр
-                document.getElementById("timer").innerHTML = "Всё!";
-                }
-            }, 1000);
-            // помечаем, что таймер уже запущен
-            started = true;
+            playSound(){
+                const sound = new Audio('src/audio/end.mp3');
+                if (this.soundState === "вкл") sound.play();
             }
         }
     }
