@@ -64,8 +64,7 @@
 </template>
 
 <script>  
-    // import {playSound} from '../components/utility/EndSound.vue';
-    import { ref } from 'vue';
+    // import {playSound} from '../components/utility/EndSound.vue';ß
     import { useTimerStore } from '../stores/timerStore';
     
     export default {
