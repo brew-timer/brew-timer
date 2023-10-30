@@ -19,7 +19,7 @@
                     justify-content ="center"
                 ></v-text-field> -->
                 <v-slider
-                    v-model="time"
+                    v-model="timerState.time"
                     thumb-label="always"
                     step="5"
                     show-ticks
@@ -36,19 +36,20 @@
                 </v-btn>
                 <v-container
                     class="text-h1">
-                    {{ calcSec() }}
+                    <!-- TODO: использовать переменную, а не функцию -->
+                    {{ sum }}
                 </v-container>
                 <v-btn
-                    @click="startTimer">
+                    @click="playSound">
                     Начать таймер
                 </v-btn>
                 <v-switch
-                    v-model="soundState"
+                    v-model="timerState.soundState"
                     hide-details
                     true-value="вкл"
                     false-value="выкл"
                     color="primary"
-                    :label="`Звук: ${soundState}`"
+                    :label="`Звук: ${timerState.soundState}`"
   ></v-switch>
             </v-responsive>
             <v-divider class="mx-4"></v-divider>
@@ -63,44 +64,73 @@
 </template>
 
 <script>  
+    // import {playSound} from '../components/utility/EndSound.vue';
+    import { ref } from 'vue';
+    import { useTimerStore } from '../stores/timerStore';
+    
     export default {
-        data(){
-            return{
-                time: 30,
-                timer: [],
-                sum: 0,
-                soundState: "вкл",
+        name: "AeropressTimer",
+        setup(){
+            const timerStore = useTimerStore();
+            
+            const playSound = function(){
+            const sound = new Audio('src/audio/end.mp3');
+            const timerStore = useTimerStore();
+            
+            if (timerStore.soundState === "вкл") sound.play();
             }
+            //TODO: сейчас данные идут не из стейт меннеджера, а из данных родителя
+            const timerState = {
+                time : timerStore.time,
+                timers: timerStore.timers,
+                sum : timerStore.sum,
+                soundState : timerStore.soundState
+            }
+            return {timerState, playSound};
         },
-        methods:{
-            calcSec(){
-                this.timer.forEach((element) => {
-                    this.sum += element.seconds
-                })
-            },
-
-            addTimer(){
-                this.timer.push({seconds: this.time})
-            },
-
-            startTimer(){
-                let a = setInterval(function (){
-                    alert('test')
-                    this.sum -= 1;
-                    if (this.sum == 0){
-                        clearInterval(a);
-                    }
-                }, 1000);
-                if (this.sum === 0) this.playSound();
-            },
-
-            playSound(){
-                const sound = new Audio('src/audio/end.mp3');
-                if (this.soundState === "вкл") sound.play();
-            }
-        }
-    }
+    };
 </script>
+<!-- <script>
+import { useTimerStore } from '../stores/timerStore';
+import { ref, computed } from 'vue';
+
+export default{
+setup(){
+    const timerStore = useTimerStore();
+
+    // Используйте реактивные переменные внутри setup()
+    const time = ref(timerStore.time);
+    const timers = ref(timerStore.timers);
+    const sum = computed(() => timerStore.sum.value);
+    const soundState = ref(timerStore.soundState);
+
+    // Методы, которые вы хотите использовать в шаблоне
+    const addTimer = () => {
+      timerStore.addTimer();
+    };
+
+    const startTimer = () => {
+      timerStore.startTimer();
+    };
+
+    const playSound = () => {
+      // Логика для воспроизведения звука
+    };
+
+    // Возвращаемые значения, доступные в шаблоне
+    return {
+      time,
+      timers,
+      sum,
+      soundState,
+      addTimer,
+      startTimer,
+      playSound,
+    };
+  },
+};
+</script> -->
+
 
 <style lang="scss" scoped>
 
