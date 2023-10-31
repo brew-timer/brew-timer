@@ -87,13 +87,13 @@
             if (timerStore.soundState === "вкл") sound.play();
             }
             //TODO: сейчас данные идут не из стейт меннеджера, а из данных родителя
-            const timerState = {
-                time : timerStore.time,
-                timers: timerStore.timers,
-                sum : timerStore.sum,
-                soundState : timerStore.soundState
-            }
-            return {timerState, timerStore, playSound, addTimer, enableSound, startTimer};
+            // const timerState = {
+            //     time : timerStore.time,
+            //     timers: timerStore.timers,
+            //     sum : timerStore.sum,
+            //     soundState : timerStore.soundState
+            // }
+            return { timerStore, playSound, addTimer, enableSound, startTimer};
         },
     };
 </script>

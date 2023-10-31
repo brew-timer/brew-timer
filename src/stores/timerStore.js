@@ -21,9 +21,12 @@ export const useTimerStore = defineStore({
   actions: {
     addTimer() {
       this.timers.push({ seconds: this.time });
+      let count = 0;
       this.timers.forEach((element) => {
-        this.sum += element.seconds
+        count += element.seconds;
+        // this.sum += element.seconds
       })
+      this.sum = count;
     },
 
     enableSound(){
