@@ -64,7 +64,6 @@
 </template>
 
 <script>  
-    // import {playSound} from '../components/utility/EndSound.vue';ß
     import { useTimerStore } from '../stores/timerStore';
     
     export default {
@@ -89,47 +88,6 @@
         },
     };
 </script>
-<!-- <script>
-import { useTimerStore } from '../stores/timerStore';
-import { ref, computed } from 'vue';
-
-export default{
-setup(){
-    const timerStore = useTimerStore();
-
-    // Используйте реактивные переменные внутри setup()
-    const time = ref(timerStore.time);
-    const timers = ref(timerStore.timers);
-    const sum = computed(() => timerStore.sum.value);
-    const soundState = ref(timerStore.soundState);
-
-    // Методы, которые вы хотите использовать в шаблоне
-    const addTimer = () => {
-      timerStore.addTimer();
-    };
-
-    const startTimer = () => {
-      timerStore.startTimer();
-    };
-
-    const playSound = () => {
-      // Логика для воспроизведения звука
-    };
-
-    // Возвращаемые значения, доступные в шаблоне
-    return {
-      time,
-      timers,
-      sum,
-      soundState,
-      addTimer,
-      startTimer,
-      playSound,
-    };
-  },
-};
-</script> -->
-
 
 <style lang="scss" scoped>
 
