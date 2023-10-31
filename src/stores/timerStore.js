@@ -19,28 +19,48 @@ export const useTimerStore = defineStore({
   },
 
   actions: {
-    addTimer({ state }) {
-      state.timers.push({ seconds: state.time });
+    addTimer() {
+      this.timers.push({ seconds: this.time });
+      this.timers.forEach((element) => {
+        this.sum += element.seconds
+      })
     },
 
-    startTimer({ state }) {
+    enableSound(){
+      if (this.soundState === "вкл") this.state.soundState = "выкл"
+    },
+
+    startTimer() {
+      // Получаем текущее время в миллисекундах
       const startTime = Date.now();
-      const endTime = startTime + (state.sum.value * 1000);
-
-      function updateTimer() {
-        const currentTime = Date.now();
-        const remainingTime = endTime - currentTime;
-
-        if (remainingTime <= 0) {
-          clearInterval(timerInterval);
-          console.log("Время истекло!");
-        } else {
-          const remainingSeconds = Math.round(remainingTime / 1000);
-          console.log(`Осталось времени: ${remainingSeconds} секунд`);
-        }
+      
+      // Вычисляем время завершения в миллисекундах
+      const endTime = startTime + (this.sum * 1000);
+  
+      // Функция для обновления оставшегося времени
+      const updateTimer = () => {
+          const currentTime = Date.now();
+          const remainingTime = endTime - currentTime;
+  
+          // Проверяем, осталось ли время
+          if (remainingTime <= 0) {
+              clearInterval(timerInterval); // Останавливаем интервал, когда время истекло
+              const sound = new Audio('src/audio/end.mp3');
+              const timerStore = useTimerStore();
+            
+              if (this.soundState === "вкл") sound.play();
+              
+              this.sum = 0;
+              this.timers = [];
+          } else {
+              // Вычисляем оставшееся время в секундах
+              const remainingSeconds = Math.round(remainingTime / 1000);
+              this.sum = remainingSeconds;
+          }
       }
-
+  
+      // Запускаем таймер с интервалом в 1 секунду для обновления оставшегося времени
       const timerInterval = setInterval(updateTimer, 1000);
-    },
+  }
   },
 });

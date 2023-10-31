@@ -19,7 +19,7 @@
                     justify-content ="center"
                 ></v-text-field> -->
                 <v-slider
-                    v-model="timerState.time"
+                    v-model="timerStore.time"
                     thumb-label="always"
                     step="5"
                     show-ticks
@@ -27,7 +27,7 @@
                     class="h-auto"/>
                 <v-btn
                     variant="tonal"
-                    @click="addTimer()"
+                    @click="addTimer"
                 >
                     Добавить таймер
                 </v-btn>
@@ -37,24 +37,24 @@
                 <v-container
                     class="text-h1">
                     <!-- TODO: использовать переменную, а не функцию -->
-                    {{ sum }}
+                    {{ timerStore.sum }}
                 </v-container>
                 <v-btn
-                    @click="playSound">
+                    @click="startTimer">
                     Начать таймер
                 </v-btn>
                 <v-switch
-                    v-model="timerState.soundState"
+                    v-model="timerStore.soundState"
                     hide-details
                     true-value="вкл"
                     false-value="выкл"
                     color="primary"
-                    :label="`Звук: ${timerState.soundState}`"
+                    :label="`Звук: ${timerStore.soundState}`"
   ></v-switch>
             </v-responsive>
             <v-divider class="mx-4"></v-divider>
             <div
-                v-for="t in timer"
+                v-for="t in timerStore.timers"
                 :key="t.seconds"
                 display="flex">
                 <v-chip>{{t.seconds}}</v-chip>
@@ -65,15 +65,27 @@
 
 <script>  
     import { useTimerStore } from '../stores/timerStore';
+    import { ref } from 'vue';
     
     export default {
         name: "AeropressTimer",
         setup(){
             const timerStore = useTimerStore();
+
+            function addTimer(){
+                timerStore.addTimer()
+            }
             
+            const enableSound = () => {
+                timerStore.enableSound()
+            }
+
+            const startTimer = () => {
+                timerStore.startTimer()
+            }
+
             const playSound = function(){
             const sound = new Audio('src/audio/end.mp3');
-            const timerStore = useTimerStore();
             
             if (timerStore.soundState === "вкл") sound.play();
             }
@@ -84,7 +96,7 @@
                 sum : timerStore.sum,
                 soundState : timerStore.soundState
             }
-            return {timerState, playSound};
+            return {timerState, timerStore, playSound, addTimer, enableSound, startTimer};
         },
     };
 </script>
