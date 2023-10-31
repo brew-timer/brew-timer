@@ -31,6 +31,9 @@
                 >
                     Добавить таймер
                 </v-btn>
+                <v-btn @click="playSound">
+                    sound test
+                </v-btn>
                 <v-container
                     class="text-h1">
                     <!-- TODO: использовать переменную, а не функцию -->
