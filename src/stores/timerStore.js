@@ -45,7 +45,7 @@ export const useTimerStore = defineStore({
           // Проверяем, осталось ли время
           if (remainingTime <= 0) {
               clearInterval(timerInterval); // Останавливаем интервал, когда время истекло
-              const sound = new Audio('src/audio/end.mp3');
+              const sound = new Audio('https://drive.google.com/uc?id=1GXfIo2F69q9UJkl0cnEsW7bUmzEObo5t&export=download');
               const timerStore = useTimerStore();
             
               if (this.soundState === "вкл") sound.play();
