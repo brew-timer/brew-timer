@@ -43,6 +43,9 @@
                 <v-btn @click="asyncTest">
                     async load test
                 </v-btn>
+                <v-btn @click="playSound">
+                    тест звука с сайта
+                </v-btn>
                 <v-switch
                     v-model="timerStore.soundState"
                     hide-details
@@ -104,7 +107,8 @@
             }
 
             const playSound = function(){
-            const sound = new Audio('https://drive.google.com/uc?id=1GXfIo2F69q9UJkl0cnEsW7bUmzEObo5t&export=download');
+            // const sound = new Audio('https://drive.google.com/uc?id=1GXfIo2F69q9UJkl0cnEsW7bUmzEObo5t&export=download');
+            const sound = new Audio('src/audio/end.mp3');
             
             if (timerStore.soundState === "вкл") sound.play();
             }
