@@ -8,6 +8,7 @@ export const useTimerStore = defineStore({
     timers: ref([]),
     sum: ref(0),
     soundState: ref("вкл"),
+    isLoading : false,
   }),
 
   getters: {

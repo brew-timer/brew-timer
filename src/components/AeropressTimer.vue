@@ -40,6 +40,9 @@
                     @click="startTimer">
                     Начать таймер
                 </v-btn>
+                <v-btn @click="asyncTest">
+                    async load test
+                </v-btn>
                 <v-switch
                     v-model="timerStore.soundState"
                     hide-details
@@ -81,6 +84,25 @@
                 timerStore.startTimer()
             }
 
+            async function asyncTest() {
+                try {
+                    // Загрузка аудио файла с помощью fetch или axios
+                    timerStore.isLoading = true;
+                    const response = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://drive.google.com/uc?id=1GXfIo2F69q9UJkl0cnEsW7bUmzEObo5t&export=download'));
+                    const audioBlob = await response.blob();
+
+                    // Создание нового объекта Audio
+                    const audio = new Audio();
+                    audio.src = URL.createObjectURL(audioBlob);
+
+                    // Воспроизведение аудио
+                    timerStore.isLoading = false;
+                    audio.play();
+                } catch (error) {
+                    alert('Произошла ошибка:', error);
+                }
+            }
+
             const playSound = function(){
             const sound = new Audio('https://drive.google.com/uc?id=1GXfIo2F69q9UJkl0cnEsW7bUmzEObo5t&export=download');
             
@@ -93,7 +115,7 @@
             //     sum : timerStore.sum,
             //     soundState : timerStore.soundState
             // }
-            return { timerStore, playSound, addTimer, enableSound, startTimer};
+            return { timerStore, playSound, addTimer, enableSound, startTimer, asyncTest};
         },
     };
 </script>
