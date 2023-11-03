@@ -33,18 +33,14 @@
                 </v-btn>
                 <v-container
                     class="text-h1">
-                    <!-- TODO: использовать переменную, а не функцию -->
                     {{ timerStore.sum }}
                 </v-container>
+                <v-btn @click="playSound">
+                  sound test
+                </v-btn>
                 <v-btn
                     @click="startTimer">
                     Начать таймер
-                </v-btn>
-                <v-btn @click="asyncTest">
-                    async load test
-                </v-btn>
-                <v-btn @click="playSound">
-                    тест звука с сайта
                 </v-btn>
                 <v-switch
                     v-model="timerStore.soundState"
@@ -106,19 +102,43 @@
                 }
             }
 
+            // Функция для воспроизведения аудио
+            function playAudio(src) {
+            const audio = new Audio(src);
+            if (timerStore.soundState === "вкл") audio.play();
+            }
+
             const playSound = function(){
             // const sound = new Audio('https://drive.google.com/uc?id=1GXfIo2F69q9UJkl0cnEsW7bUmzEObo5t&export=download');
-            const sound = new Audio('src/audio/end.mp3');
-            
-            if (timerStore.soundState === "вкл") sound.play();
+            // const sound = new Audio('src/audio/end.mp3');
+                const audioURL = ('https://drive.google.com/uc?id=1GXfIo2F69q9UJkl0cnEsW7bUmzEObo5t&export=download');
+
+                fetch(audioURL)
+                .then(response => {
+                    // Если запрос прошел успешно, попытаемся воспроизвести аудио
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Попытка конвертировать полученные данные в URL для воспроизведения
+                    const audioSrc = URL.createObjectURL(blob);
+
+                    // Сохраняем URL аудиофайла в localStorage
+                    localStorage.setItem('audioSrc', audioSrc);
+
+                    // Пытаемся воспроизвести аудио
+                    playAudio(audioSrc);
+                })
+                .catch(() => {
+                    // Если запрос не удался из-за ошибки CORS, используем сохраненный URL из localStorage
+                    const storedAudioSrc = localStorage.getItem('audioSrc');
+                    if (storedAudioSrc) {
+                    playAudio(storedAudioSrc);
+                    } else {
+                    alert('Не удалось загрузить аудио и нет сохраненного URL.');
+                    }
+                });
+                
             }
-            //TODO: сейчас данные идут не из стейт меннеджера, а из данных родителя
-            // const timerState = {
-            //     time : timerStore.time,
-            //     timers: timerStore.timers,
-            //     sum : timerStore.sum,
-            //     soundState : timerStore.soundState
-            // }
             return { timerStore, playSound, addTimer, enableSound, startTimer, asyncTest};
         },
     };
